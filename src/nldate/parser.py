@@ -75,6 +75,13 @@ def _parse_absolute(s: str) -> date | None:
     return None
 
 
+_WORD_NUMBERS = {
+    "one": 1, "two": 2, "three": 3, "four": 4, "five": 5,
+    "six": 6, "seven": 7, "eight": 8, "nine": 9, "ten": 10,
+    "eleven": 11, "twelve": 12,
+}
+
+
 def _parse_relative_delta(s: str) -> relativedelta | None:
     """
     Parse a compound delta string like "1 year and 2 months" or "3 weeks and 5 days".
@@ -84,9 +91,13 @@ def _parse_relative_delta(s: str) -> relativedelta | None:
     delta = relativedelta()
     found = False
 
-    pattern = re.compile(r"(a|an|\d+)\s+(year|month|week|day)s?")
+    word_nums = "|".join(_WORD_NUMBERS)
+    pattern = re.compile(rf"(a|an|\d+|{word_nums})\s+(year|month|week|day)s?")
     for m in pattern.finditer(s):
-        n = 1 if m.group(1) in ("a", "an") else int(m.group(1))
+        tok = m.group(1)
+        n = 1 if tok in ("a", "an") else _WORD_NUMBERS.get(tok, int(tok) if tok.isdigit() else None)
+        if n is None:
+            continue
         unit = m.group(2)
         found = True
         if unit == "year":
