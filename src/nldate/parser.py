@@ -101,12 +101,12 @@ def _parse_relative_delta(s: str) -> relativedelta | None:
     found = False
 
     word_nums = "|".join(_WORD_NUMBERS)
-    pattern = re.compile(rf"(a|an|\d+|{word_nums})\s+(year|month|week|day)s?")
+    pattern = re.compile(rf"(a|an|the|\d+|{word_nums})\s+(year|month|week|day)s?")
     for m in pattern.finditer(s):
         tok = m.group(1)
         n = (
             1
-            if tok in ("a", "an")
+            if tok in ("a", "an", "the")
             else _WORD_NUMBERS.get(tok, int(tok) if tok.isdigit() else None)
         )
         if n is None:
