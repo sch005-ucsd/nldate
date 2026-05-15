@@ -63,12 +63,12 @@ def _parse_absolute(s: str) -> date | None:
     if m:
         return date(int(m.group(3)), int(m.group(1)), int(m.group(2)))
 
-    # "Month Day, Year" — e.g. "December 1st, 2025" or "March 5, 2024"
+    # "Month Day, Year" — e.g. "December 1st, 2025", "March 5, 2024", or "Dec. 1, 2025"
     m = re.fullmatch(
-        r"([A-Za-z]+)\s+(\d{1,2})(?:st|nd|rd|th)?,?\s+(\d{4})", s, re.IGNORECASE
+        r"([A-Za-z]+\.?)\s+(\d{1,2})(?:st|nd|rd|th)?,?\s+(\d{4})", s, re.IGNORECASE
     )
     if m:
-        month = _MONTH_NAMES.get(m.group(1).lower())
+        month = _MONTH_NAMES.get(m.group(1).lower().rstrip("."))
         if month:
             return date(int(m.group(3)), month, int(m.group(2)))
 
