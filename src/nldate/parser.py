@@ -54,7 +54,7 @@ def _parse_absolute(s: str) -> date | None:
         return date(int(m.group(1)), int(m.group(2)), int(m.group(3)))
 
     # YYYY/MM/DD
-    m = re.fullmatch(r"(\d{4})/(\d{2})/(\d{2})", s)
+    m = re.fullmatch(r"(\d{4})/(\d{1,2})/(\d{1,2})", s)
     if m:
         return date(int(m.group(1)), int(m.group(2)), int(m.group(3)))
 
