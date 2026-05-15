@@ -84,9 +84,9 @@ def _parse_relative_delta(s: str) -> relativedelta | None:
     delta = relativedelta()
     found = False
 
-    pattern = re.compile(r"(\d+)\s+(year|month|week|day)s?")
+    pattern = re.compile(r"(a|an|\d+)\s+(year|month|week|day)s?")
     for m in pattern.finditer(s):
-        n = int(m.group(1))
+        n = 1 if m.group(1) in ("a", "an") else int(m.group(1))
         unit = m.group(2)
         found = True
         if unit == "year":
