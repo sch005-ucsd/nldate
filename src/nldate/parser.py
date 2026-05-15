@@ -76,9 +76,18 @@ def _parse_absolute(s: str) -> date | None:
 
 
 _WORD_NUMBERS = {
-    "one": 1, "two": 2, "three": 3, "four": 4, "five": 5,
-    "six": 6, "seven": 7, "eight": 8, "nine": 9, "ten": 10,
-    "eleven": 11, "twelve": 12,
+    "one": 1,
+    "two": 2,
+    "three": 3,
+    "four": 4,
+    "five": 5,
+    "six": 6,
+    "seven": 7,
+    "eight": 8,
+    "nine": 9,
+    "ten": 10,
+    "eleven": 11,
+    "twelve": 12,
 }
 
 
@@ -95,7 +104,11 @@ def _parse_relative_delta(s: str) -> relativedelta | None:
     pattern = re.compile(rf"(a|an|\d+|{word_nums})\s+(year|month|week|day)s?")
     for m in pattern.finditer(s):
         tok = m.group(1)
-        n = 1 if tok in ("a", "an") else _WORD_NUMBERS.get(tok, int(tok) if tok.isdigit() else None)
+        n = (
+            1
+            if tok in ("a", "an")
+            else _WORD_NUMBERS.get(tok, int(tok) if tok.isdigit() else None)
+        )
         if n is None:
             continue
         unit = m.group(2)
@@ -202,8 +215,8 @@ def parse(s: str, today: date | None = None) -> date:
         if delta is not None:
             return base + delta
 
-    # --- "N units from today" ---
-    m = re.fullmatch(r"(.+?)\s+from\s+today", lower)
+    # --- "N units from today/now" ---
+    m = re.fullmatch(r"(.+?)\s+from\s+(?:today|now)", lower)
     if m:
         delta = _parse_relative_delta(m.group(1))
         if delta is not None:
